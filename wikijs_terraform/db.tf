@@ -14,6 +14,13 @@ resource "google_sql_database_instance" "main" {
   }
 }
 
+resource "google_sql_user" "db_user" {
+  project = var.project
+  name     = var.db-user
+  instance = google_sql_database_instance.main.name
+  password = var.db-password
+}
+
 resource "google_sql_database" "wiki-db" {
   project = var.project
 
