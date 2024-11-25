@@ -1,12 +1,12 @@
-resource "google_cloud_run_v2_service" "wiki" {
-  name     = "wiki"
+resource "google_cloud_run_v2_service" "wikijs" {
+  name     = "wikijs"
   location = var.region
   ingress  = "INGRESS_TRAFFIC_ALL"
 
   template {
     containers {
       # image = "us-docker.pkg.dev/cloudrun/container/hello"
-      image = "asia-northeast1-docker.pkg.dev/testing-387914/wikijs/wiki:latest"
+      image = "asia-northeast1-docker.pkg.dev/testing-387914/wikijscontainer/wikijs:latest"
       ports {
         container_port = 3000
       }
@@ -38,6 +38,10 @@ resource "google_cloud_run_v2_service" "wiki" {
 #         name  = "DB_SSL"
 #         value = "true"
 #       }
+      env {
+        name  = "OFFLINE_ACTIVE"
+        value = 1
+      }
     }
     vpc_access {
       connector = google_vpc_access_connector.connector.id
@@ -56,6 +60,6 @@ data "google_iam_policy" "noauth" {
 
 resource "google_cloud_run_v2_service_iam_policy" "policy" {
   location    = var.region
-  name        = google_cloud_run_v2_service.wiki.name
+  name        = google_cloud_run_v2_service.wikijs.name
   policy_data = data.google_iam_policy.noauth.policy_data
 }
